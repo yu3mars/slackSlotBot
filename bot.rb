@@ -1,13 +1,21 @@
 # coding: utf-8
 require 'slack-ruby-client'
 
-def slot(cnt = 1)
+def slot(cnt = 1, bonus = false)
   yaku = [":3:",":tangerine:",":fish:"]
   str = ""
   index = Array.new()
   for c in 1..cnt
     for i in 0..2 do
       index[i] = rand(yaku.count)
+    end
+    if(bonus==true)
+      if(rand(3)==1)
+        index[1] = index[0]
+        index[2] = index[0]
+      end
+    end
+    for i in 0..2 do
       str += yaku[index[i]]
     end
     if(index[0] == index[1] && index[1] == index[2])
@@ -80,7 +88,19 @@ client.on :message do |data|
       elsif (slotCnt>10)
         clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: "一度のスロットは10連まで!", username: "yubot", as_user: false, icon_emoji: ":3:")
       elsif
-        clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: "負の回数は回せないよ!", username: "yubot", as_user: false, icon_emoji: ":3:")        
+        clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: "正の回数じゃないと回せないよ!", username: "yubot", as_user: false, icon_emoji: ":3:")        
+      end
+    when /bot slot bonus \d+/
+      m = /bot slot bonus (\d+)/.match(data.text)
+      puts m[1]
+      slotCnt = m[1].to_i
+      if(0<slotCnt && slotCnt<=10)
+        slotStr = slot(slotCnt, true)
+        clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: slotStr, username: "yubot", as_user: false, icon_emoji: ":3:")  
+      elsif (slotCnt>10)
+        clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: "一度のスロットは10連まで!", username: "yubot", as_user: false, icon_emoji: ":3:")
+      elsif
+        clientWeb.chat_postMessage(channel: '#yu3-dev-memo', text: "正の回数じゃないと回せないよ!", username: "yubot", as_user: false, icon_emoji: ":3:")        
       end
     when /^bot/ then
       client.message channel: data.channel, text: "Sorry <@#{data.user}>, what?"
