@@ -1,4 +1,6 @@
+#custom
 token.txt
+*.db
 
 *.gem
 *.rbc
