@@ -53,7 +53,7 @@ def slot(cnt = 1, bonus = false, userId = nil)
 
     else
         puts "insert"
-        dbh.do("INSERT INTO person(name, coin, kakin) VALUES(?, ?, ?)", userId, 50, 0)
+        dbh.do("INSERT INTO person(name, coin, kakin) VALUES(?, ?, ?)", userId, 50 + bingoCnt * 3, 0)
         str = "初めてのあなたにコイン50枚プレゼント!\n" + str
     end
     sth.finish
